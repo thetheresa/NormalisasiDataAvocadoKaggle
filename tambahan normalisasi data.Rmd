@@ -1,0 +1,231 @@
+---
+title: "Praktikum Week 10 : Outliers"
+author: "Kelompok 15 (Sri Ranita, Sukma Sekar Devita, Theresa Agnes"
+date: "11/9/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. DATASET: Avocado Prices
+We use “Avocado Prices” dataset from Kaggle that can be accessed via this link: 
+[https://www.kaggle.com/datasets/neuromusic/avocado-prices].
+This dataset stores historical data on avocado prices and sales volume in multiple US markets. It has 9 attributes, including date, average price, total volume, avocado4046, avocado4225, avocado4770, type, year, and region.
+
+```{r}
+# Import Data Set
+setwd('C:/Thesa/UNAIR/SEM 3/Materi Kuliah/Eksplorasi Visualisasi Data/Datasets')
+avocado = read.csv('avocado.csv')
+summary(avocado)
+head(avocado)
+```
+Attribute Description
+AveragePrice  : the average price of a single avocado
+TotalVolume   : total number of avocados sold
+Avocado4046   : total number of avocados with PLU 4046 sold (non-organic small/medium Hass Avocados)
+Avocado4225   : total number of avocados with PLU 4225 sold (non-organic large Hass Avocados)
+Avocado4770   : total number of avocados with PLU 4770 sold (non-organic extra large Hass Avocados)
+
+## 2. Subset Dataset
+
+Disini kami hanya memilih 5 variabel numerik untuk digunakan, diantaranya :
+**AveragePrice**, **TotalVolume**, **Avocado4046**, **Avocado4225**, dan **Avocado4770**.
+```{r}
+#Subset Data
+databaru <- subset(x = avocado, select = c(AveragePrice, TotalVolume, Avocado4046, Avocado4225, Avocado4770))
+```
+
+
+# 3. Data Preprocessing : Missing Value
+
+Tahap pertama dalam melakukan data preprocessing adalah memeriksa apakah adanya nilai missing value menggunakan library mice dan diberikan matriks persebaran missing value pada data dengan menggunakan md.pattern()
+
+Dapat dilihat bahwa pada variabel Avocado4046, Avocado4225, dan Avocado4770 memiliki missing value masing-masing sejumlah 5 nilai NA, sehingga total missing value pada dataset adalah 15 nilai.
+
+```{r}
+install.packages('mice')
+library(mice)
+md.pattern(databaru, rotate.names = TRUE)
+```
+
+Terlihat pada summarize data bahwa terdapat nilai yang hilang (NA) atau Missing Values di dalam variabel “Avocado4046”, “Avocado4225”, dan “Avocado4770” masing-masing sebanyak 5 nilai NA.
+```{r}
+summary(databaru)
+```
+
+# Data Preprocessing : Outlier
+
+## Pendekatan Descriptive Statistics
+
+Pendekatan dengan menggunakan Descriptive Statistics adalah pendekatan
+untuk menganalisis data dengan cara mendeskripsikan data yang sudah
+dikumpulkan dengan hanya memberikan gambaran umum dari data tersebut.
+
+Dalam memberikan gambaran data tersebut, kita akan menggunakan 2 metode,
+yaitu **Summary (Min-Max)** dan **Boxplot**.
+
+## 1. Summary (Min-Max)
+
+Penggunaan metode summary adalah untuk mengetahui nilai minimum dan
+maksimum dari masing-masing atribut data. Kita akan memberikan pendapat
+dengan melihat jarak/perbedaan antara nilai minimum dan maksimum data.
+
+# Atribut Average Price
+```{r}
+#max
+library(outliers)
+data <- grubbs.test(databaru$AveragePrice)
+data 
+```
+
+```{r}
+#min
+library(outliers)
+data <- grubbs.test(databaru$AveragePrice, opposite=TRUE)
+data 
+```
+
+# Atribut Total Volume
+```{r}
+#max
+library(outliers)
+data <- grubbs.test(databaru$TotalVolume)
+data
+```
+
+```{r}
+#min
+library(outliers)
+data <- grubbs.test(databaru$TotalVolume, opposite=TRUE)
+data 
+```
+
+
+# Atribut Avocado4046
+```{r}
+#max
+library(outliers)
+data <- grubbs.test(databaru$Avocado4046)
+data
+```
+
+```{r}
+#min
+library(outliers)
+data <- grubbs.test(databaru$Avocado4046, opposite=TRUE)
+data 
+```
+
+
+# Atribut Avocado4225
+```{r}
+#max
+library(outliers)
+data <- grubbs.test(databaru$Avocado4225)
+data
+```
+
+```{r}
+#min
+library(outliers)
+data <- grubbs.test(databaru$Avocado4225, opposite=TRUE)
+data 
+```
+
+# Atribut Avocado4770
+```{r}
+#max
+library(outliers)
+data <- grubbs.test(databaru$Avocado4770)
+data
+```
+
+```{r}
+#min
+library(outliers)
+data <- grubbs.test(databaru$Avocado4770, opposite=TRUE)
+data 
+```
+
+
+# 2. Boxplot
+
+Dalam visualisasi Boxplot, kita akan melihat nilai yang berada di luar
+dari *whisker* Boxplot tersebut. Jika nilai tersebut berada di luar
+*whisker*, maka dapat disimpulkan bahwa terdapat *outlier*.
+
+# Atribut Average Price
+```{r}
+boxplot(databaru$AveragePrice)
+```
+
+```{r}
+boxplot.stats(databaru$AveragePrice)
+```
+
+# Atribut Total Volume
+```{r}
+boxplot(databaru$TotalVolume)
+```
+
+```{r}
+boxplot.stats(databaru$TotalVolume)
+```
+
+# Atribut Avocado4046
+```{r}
+boxplot(databaru$Avocado4046)
+```
+
+```{r}
+boxplot.stats(databaru$Avocado4046)
+```
+
+# Atribut Avocado4225
+```{r}
+boxplot(databaru$Avocado4225)
+```
+
+```{r}
+boxplot.stats(databaru$Avocado4225)
+```
+
+# Atribut Avocado4770
+```{r}
+boxplot(databaru$Avocado4770)
+```
+
+```{r}
+boxplot.stats(databaru$Avocado4770)
+```
+
+### Normalisasi Data
+Hal ini dilakukan supaya data lebih siap digunakan tanpa ada inkonsistensi dari data
+```{r}
+minmax.norm = function(x) {
+ (x - min(x)) / (max(x) - min(x))
+}
+```
+Selanjutnya adalah proses normalisasi data, kami menggunakan pendekatan ke distribusi normal di tingkat kepercayaan 0,05. Kira mencari berapa Z hitung dari data kita
+### Nearest-neighbour
+```{r}
+data.norm = as.data.frame(lapply(databaru, minmax.norm))
+head(data.norm)
+```
+### Remove outlier dengan Z
+```{r}
+z.scores = as.data.frame(sapply(data.norm, function(data.norm) 
+  (abs(data.norm-mean(data.norm))/sd(data.norm))))
+no.outliers <- z.scores[!rowSums(z.scores>1.96), ]
+dim(no.outliers)
+```
+Setelah kita mengetahui Zhitung kita, setiap nilai Zhitung yang di atas atau melebihi Ztabel (1,96) akan dihapus dari tabel. Ztabel dengan ukuran 1,96 karena tingkat kepercayaan sebesar 95%
+### New Data
+```{r}
+dim(databaru)
+```
+Hasilnya adalah seperti di atas dimana dim adalah dimensi dari databaru dengan besar 208 dikali 5
+
+
